@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -51,6 +51,40 @@
             font-size: 1.5rem;
         }
 
+        .game-settings {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .game-settings h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .settings-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .settings-row label {
+            font-weight: bold;
+            color: #555;
+            min-width: 120px;
+        }
+
+        .settings-row input, .settings-row select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
         .player-setup {
             display: flex;
             gap: 15px;
@@ -73,7 +107,7 @@
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
         }
 
-        .add-player-btn, .start-game-btn, .reset-btn {
+        .add-player-btn, .start-game-btn, .reset-btn, .history-btn {
             background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
             border: none;
@@ -85,14 +119,19 @@
             transition: all 0.3s ease;
         }
 
-        .add-player-btn:hover, .start-game-btn:hover, .reset-btn:hover {
+        .add-player-btn:hover, .start-game-btn:hover, .reset-btn:hover, .history-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .reset-btn {
             background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-            margin-left: 15px;
+            margin: 0 7px;
+        }
+
+        .history-btn {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            margin: 0 7px;
         }
 
         .players-list {
@@ -127,6 +166,41 @@
         .game-section {
             padding: 30px;
             display: none;
+        }
+
+        .game-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .game-info h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .victory-announcement {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            border: 3px solid #ffc107;
+            animation: celebration 2s ease-in-out;
+        }
+
+        @keyframes celebration {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .victory-announcement h2 {
+            color: #d4a500;
+            font-size: 2rem;
+            margin-bottom: 10px;
         }
 
         .scoreboard {
@@ -179,6 +253,16 @@
             color: #667eea;
             margin: 15px 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .score-change {
+            animation: scoreChange 0.5s ease-out;
+        }
+
+        @keyframes scoreChange {
+            0% { transform: scale(1.2); color: #ff6b6b; }
+            100% { transform: scale(1); }
         }
 
         .score-controls {
@@ -253,6 +337,83 @@
             border-top: 2px solid #f0f0f0;
         }
 
+        .history-section {
+            padding: 30px;
+            display: none;
+        }
+
+        .history-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #48bb78;
+        }
+
+        .history-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .history-scores {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .history-score {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal-btn.confirm {
+            background: #48bb78;
+            color: white;
+        }
+
+        .modal-btn.cancel {
+            background: #ff6b6b;
+            color: white;
+        }
+
         .hidden {
             display: none;
         }
@@ -288,6 +449,15 @@
                 height: 40px;
                 font-size: 1.2rem;
             }
+
+            .settings-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .settings-row label {
+                min-width: auto;
+            }
         }
 
         @media (min-width: 769px) {
@@ -301,10 +471,27 @@
     <div class="container">
         <div class="header">
             <h1>🎲 Marcador de Juegos de Mesa 🎯</h1>
-            <p>¡Lleva la puntuación de tus juegos favoritos!</p>
+            <p>¡Lleva el puntaje de tus juegos favoritos!</p>
         </div>
 
         <div id="setup" class="setup-section">
+            <div class="game-settings">
+                <h3>⚙️ Configuración del Juego</h3>
+                <div class="settings-row">
+                    <label for="victoryType">Condición de Victoria:</label>
+                    <select id="victoryType">
+                        <option value="none">Sin límite</option>
+                        <option value="points">Primero en llegar a...</option>
+                        <option value="rounds">Jugar X rondas</option>
+                    </select>
+                </div>
+                <div class="settings-row" id="victoryValueRow" style="display: none;">
+                    <label for="victoryValue">Objetivo:</label>
+                    <input type="number" id="victoryValue" min="1" value="100">
+                    <span id="victoryLabel">puntos</span>
+                </div>
+            </div>
+
             <h2>Configurar Jugadores</h2>
             <div class="player-setup">
                 <input type="text" id="playerName" placeholder="Nombre del jugador" maxlength="20">
@@ -313,13 +500,46 @@
             <div id="playersList" class="players-list"></div>
             <div style="margin-top: 30px; text-align: center;">
                 <button class="start-game-btn" onclick="startGame()">Iniciar Juego</button>
+                <button class="history-btn" onclick="showHistory()">Ver Historial</button>
             </div>
         </div>
 
         <div id="game" class="game-section">
+            <div id="gameInfo" class="game-info" style="display: none;">
+                <h3>🎯 Objetivo del Juego</h3>
+                <p id="gameObjective"></p>
+            </div>
+            
+            <div id="victoryMessage" class="victory-announcement" style="display: none;">
+                <h2>🎉 ¡Victoria! 🎉</h2>
+                <p id="winnerText"></p>
+            </div>
+
             <div id="scoreboard" class="scoreboard"></div>
             <div class="game-controls">
-                <button class="reset-btn" onclick="resetGame()">Nueva Partida</button>
+                <button class="reset-btn" onclick="showResetModal()">Nueva Partida</button>
+                <button class="history-btn" onclick="showHistory()">Ver Historial</button>
+            </div>
+        </div>
+
+        <div id="history" class="history-section">
+            <h2>📊 Historial de Partidas</h2>
+            <div id="historyList"></div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="add-player-btn" onclick="showSetup()">Volver al Inicio</button>
+                <button class="reset-btn" onclick="clearHistory()">Limpiar Historial</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div id="resetModal" class="modal">
+        <div class="modal-content">
+            <h3>⚠️ Confirmar Reset</h3>
+            <p>¿Estás seguro de que quieres iniciar una nueva partida? Se perderán todos los puntajes actuales.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" onclick="confirmReset()">Sí, Nueva Partida</button>
+                <button class="modal-btn cancel" onclick="closeModal()">Cancelar</button>
             </div>
         </div>
     </div>
@@ -327,6 +547,58 @@
     <script>
         let players = [];
         let gameStarted = false;
+        let gameSettings = {
+            victoryType: 'none',
+            victoryValue: 100
+        };
+        let gameHistory = [];
+        let currentGame = {
+            startTime: null,
+            endTime: null,
+            settings: {},
+            players: []
+        };
+
+        // Cargar datos al iniciar
+        window.addEventListener('load', function() {
+            loadGameData();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('victoryType').addEventListener('change', function() {
+                const victoryType = this.value;
+                const valueRow = document.getElementById('victoryValueRow');
+                const label = document.getElementById('victoryLabel');
+                
+                if (victoryType === 'none') {
+                    valueRow.style.display = 'none';
+                } else {
+                    valueRow.style.display = 'flex';
+                    label.textContent = victoryType === 'points' ? 'puntos' : 'rondas';
+                }
+                
+                updateGameSettings();
+            });
+
+            document.getElementById('victoryValue').addEventListener('input', updateGameSettings);
+
+            // Permitir agregar jugador con Enter
+            document.getElementById('playerName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addPlayer();
+                }
+            });
+
+            // Auto-guardar cada 30 segundos
+            setInterval(saveGameData, 30000);
+        }
+
+        function updateGameSettings() {
+            gameSettings.victoryType = document.getElementById('victoryType').value;
+            gameSettings.victoryValue = parseInt(document.getElementById('victoryValue').value) || 100;
+            saveGameData();
+        }
 
         function addPlayer() {
             const nameInput = document.getElementById('playerName');
@@ -355,11 +627,13 @@
             
             nameInput.value = '';
             renderPlayersList();
+            saveGameData();
         }
 
         function removePlayer(playerId) {
             players = players.filter(player => player.id !== playerId);
             renderPlayersList();
+            saveGameData();
         }
 
         function renderPlayersList() {
@@ -385,19 +659,56 @@
             }
             
             gameStarted = true;
+            currentGame = {
+                startTime: new Date(),
+                endTime: null,
+                settings: {...gameSettings},
+                players: players.map(p => ({...p}))
+            };
+            
             document.getElementById('setup').style.display = 'none';
             document.getElementById('game').style.display = 'block';
+            document.getElementById('history').style.display = 'none';
+            
+            setupGameInfo();
             renderScoreboard();
+            saveGameData();
+        }
+
+        function setupGameInfo() {
+            const gameInfo = document.getElementById('gameInfo');
+            const gameObjective = document.getElementById('gameObjective');
+            
+            if (gameSettings.victoryType === 'none') {
+                gameInfo.style.display = 'none';
+            } else {
+                gameInfo.style.display = 'block';
+                if (gameSettings.victoryType === 'points') {
+                    gameObjective.textContent = `El primer jugador en llegar a ${gameSettings.victoryValue} puntos gana`;
+                } else {
+                    gameObjective.textContent = `Jugaremos ${gameSettings.victoryValue} rondas`;
+                }
+            }
         }
 
         function renderScoreboard() {
             const container = document.getElementById('scoreboard');
             const maxScore = Math.max(...players.map(p => p.score), 0);
+            let winner = null;
+            
+            // Verificar condición de victoria
+            if (gameSettings.victoryType === 'points' && maxScore >= gameSettings.victoryValue) {
+                winner = players.find(p => p.score === maxScore);
+            }
+            
+            if (winner) {
+                showVictoryMessage(winner);
+            }
             
             container.innerHTML = players.map(player => `
                 <div class="player-card ${player.score === maxScore && maxScore > 0 ? 'winner' : ''}">
                     <div class="player-name">${player.name}</div>
-                    <div class="player-score">${player.score}</div>
+                    <div class="player-score" id="score-${player.id}">${player.score}</div>
                     <div class="score-controls">
                         <button class="score-btn minus" onclick="changeScore(${player.id}, -1)">−</button>
                         <button class="score-btn" onclick="changeScore(${player.id}, 1)">+</button>
@@ -416,7 +727,14 @@
             const player = players.find(p => p.id === playerId);
             if (player) {
                 player.score = Math.max(0, player.score + points);
+                
+                // Animación de cambio de puntaje
+                const scoreElement = document.getElementById(`score-${playerId}`);
+                scoreElement.classList.add('score-change');
+                setTimeout(() => scoreElement.classList.remove('score-change'), 500);
+                
                 renderScoreboard();
+                saveGameData();
             }
         }
 
@@ -433,22 +751,151 @@
             input.value = '';
         }
 
-        function resetGame() {
-            if (confirm('¿Estás seguro de que quieres reiniciar la partida? Se perderán todos los puntajes.')) {
-                players.forEach(player => player.score = 0);
-                gameStarted = false;
-                document.getElementById('setup').style.display = 'block';
-                document.getElementById('game').style.display = 'none';
-                renderPlayersList();
+        function showVictoryMessage(winner) {
+            const victoryMessage = document.getElementById('victoryMessage');
+            const winnerText = document.getElementById('winnerText');
+            
+            winnerText.textContent = `🏆 ${winner.name} ha ganado con ${winner.score} puntos! 🏆`;
+            victoryMessage.style.display = 'block';
+            
+            // Finalizar partida actual y guardar en historial
+            if (currentGame.endTime === null) {
+                finishCurrentGame();
             }
         }
 
-        // Permitir agregar jugador con Enter
-        document.getElementById('playerName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addPlayer();
+        function finishCurrentGame() {
+            currentGame.endTime = new Date();
+            currentGame.players = players.map(p => ({...p}));
+            
+            gameHistory.unshift(currentGame);
+            
+            // Mantener solo las últimas 50 partidas
+            if (gameHistory.length > 50) {
+                gameHistory = gameHistory.slice(0, 50);
             }
-        });
+            
+            saveGameData();
+        }
+
+        function showResetModal() {
+            document.getElementById('resetModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('resetModal').style.display = 'none';
+        }
+
+        function confirmReset() {
+            // Guardar partida actual en historial si no se ha guardado
+            if (gameStarted && currentGame.endTime === null) {
+                finishCurrentGame();
+            }
+            
+            players.forEach(player => player.score = 0);
+            gameStarted = false;
+            document.getElementById('victoryMessage').style.display = 'none';
+            document.getElementById('setup').style.display = 'block';
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('history').style.display = 'none';
+            renderPlayersList();
+            closeModal();
+            saveGameData();
+        }
+
+        function showHistory() {
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('history').style.display = 'block';
+            renderHistory();
+        }
+
+        function showSetup() {
+            document.getElementById('setup').style.display = 'block';
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('history').style.display = 'none';
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyList');
+            
+            if (gameHistory.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; margin: 20px 0;">No hay partidas en el historial</p>';
+                return;
+            }
+            
+            container.innerHTML = gameHistory.map((game, index) => {
+                const date = new Date(game.startTime).toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const sortedPlayers = [...game.players].sort((a, b) => b.score - a.score);
+                const winner = sortedPlayers[0];
+                
+                return `
+                    <div class="history-item">
+                        <h4>🎮 Partida #${gameHistory.length - index} - ${date}</h4>
+                        <p><strong>Ganador:</strong> 🏆 ${winner.name} (${winner.score} puntos)</p>
+                        <div class="history-scores">
+                            ${sortedPlayers.map(player => `
+                                <div class="history-score">
+                                    ${player.name}: ${player.score}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearHistory() {
+            if (confirm('¿Estás seguro de que quieres limpiar todo el historial?')) {
+                gameHistory = [];
+                renderHistory();
+                saveGameData();
+            }
+        }
+
+        // Funciones de persistencia de datos
+        function saveGameData() {
+            const gameData = {
+                players: players,
+                gameSettings: gameSettings,
+                gameHistory: gameHistory,
+                gameStarted: gameStarted,
+                currentGame: currentGame,
+                lastSaved: new Date()
+            };
+            
+            // Usar variables JavaScript en lugar de localStorage
+            window.gameData = gameData;
+        }
+
+        function loadGameData() {
+            // En un entorno real con localStorage, cargaríamos los datos aquí
+            // Por ahora, inicializamos con valores por defecto
+            if (window.gameData) {
+                const data = window.gameData;
+                players = data.players || [];
+                gameSettings = data.gameSettings || { victoryType: 'none', victoryValue: 100 };
+                gameHistory = data.gameHistory || [];
+                gameStarted = data.gameStarted || false;
+                currentGame = data.currentGame || { startTime: null, endTime: null, settings: {}, players: [] };
+                
+                // Restaurar configuración UI
+                document.getElementById('victoryType').value = gameSettings.victoryType;
+                document.getElementById('victoryValue').value = gameSettings.victoryValue;
+                
+                const event = new Event('change');
+                document.getElementById('victoryType').dispatchEvent(event);
+                
+                renderPlayersList();
+            }
+        }
 
         // Inicializar
         renderPlayersList();
