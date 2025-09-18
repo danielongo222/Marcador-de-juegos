@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marcador de Juegos de Mesa</title>
+    
+    <!-- PWA Meta tags para iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Marcador Mesa">
+    
+    <!-- Prevenir zoom en dispositivos móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Iconos para diferentes tamaños iOS -->
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iNDAiIGZpbGw9IiMzQjgyRjYiLz4KPHN2ZyB4PSI0MCIgeT0iNDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IndoaXRlIj4KICA8cGF0aCBkPSJNMTkgM0g1Yy0xLjEgMC0yIC45LTIgMnYxNGMwIDEuMS45IDIgMiAyaDE0YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6TTkgMTdINXYtNGg0djR6bTAtNkg1VjdoNHY0em02IDRoLTR2LTRoNHY0em0wLTZoLTRWN2g0djR6bTYgNmgtNHYtNGg0djR6bTAtNmgtNFY3aDR2NHoiLz4KICA8Y2lyY2xlIGN4PSI3IiBjeT0iOSIgcj0iMSIgZmlsbD0iIzNCODJGNiIvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iOSIgcj0iMSIgZmlsbD0iIzNCODJGNiIvPgogIDxjaXJjbGUgY3g9IjE3IiBjeT0iOSIgcj0iMSIgZmlsbD0iIzNCODJGNiIvPgo8L3N2Zz4KPC9zdmc+">
+    <meta name="theme-color" content="#3B82F6">
+    
     <style>
         * {
             margin: 0;
@@ -12,257 +25,178 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            color: #333;
         }
 
-        .container {
-            max-width: 900px;
+        .app-container {
+            max-width: 800px;
             margin: 0 auto;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         .header {
-            background: linear-gradient(45deg, #ff6b6b, #feca57);
-            color: white;
             text-align: center;
-            padding: 30px;
+            margin-bottom: 30px;
         }
 
         .header h1 {
+            color: #4f46e5;
             font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(79, 70, 229, 0.1);
         }
 
-        .setup-section {
-            padding: 30px;
-            border-bottom: 2px solid #f0f0f0;
+        .game-setup {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
         }
 
-        .setup-section h2 {
-            color: #333;
+        .input-group {
             margin-bottom: 20px;
-            font-size: 1.5rem;
         }
 
-        .game-settings {
-            background: #f8f9fa;
-            padding: 20px;
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 1.1rem;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #d1d5db;
             border-radius: 10px;
-            margin-bottom: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
         }
 
-        .game-settings h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-
-        .settings-row {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .settings-row label {
-            font-weight: bold;
-            color: #555;
-            min-width: 120px;
-        }
-
-        .settings-row input, .settings-row select {
-            padding: 8px 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .player-setup {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .player-setup input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            min-width: 200px;
-        }
-
-        .player-setup input:focus {
+        .input-group input:focus, .input-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
-        .add-player-btn, .start-game-btn, .reset-btn, .history-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+        .btn {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
             border: none;
             padding: 12px 25px;
             border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .add-player-btn:hover, .start-game-btn:hover, .reset-btn:hover, .history-btn:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
         }
 
-        .reset-btn {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-            margin: 0 7px;
+        .btn:active {
+            transform: translateY(0);
         }
 
-        .history-btn {
-            background: linear-gradient(45deg, #48bb78, #38a169);
-            margin: 0 7px;
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            margin-left: 10px;
         }
 
-        .players-list {
-            margin-top: 20px;
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
         }
 
-        .player-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8f9fa;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .remove-player {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .remove-player:hover {
-            background: #ff5252;
-        }
-
-        .game-section {
-            padding: 30px;
-            display: none;
-        }
-
-        .game-info {
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .game-info h3 {
-            color: #1976d2;
-            margin-bottom: 10px;
-        }
-
-        .victory-announcement {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 25px;
-            border: 3px solid #ffc107;
-            animation: celebration 2s ease-in-out;
-        }
-
-        @keyframes celebration {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .victory-announcement h2 {
-            color: #d4a500;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .scoreboard {
+        .players-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
+            margin-top: 30px;
         }
 
         .player-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            background: white;
             border-radius: 15px;
-            padding: 25px;
-            text-align: center;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             border: 3px solid transparent;
             transition: all 0.3s ease;
             position: relative;
+            overflow: hidden;
+        }
+
+        .player-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #06b6d4);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
         .player-card.winner {
-            border-color: #ffd700;
-            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-            transform: scale(1.02);
+            border-color: #10b981;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            animation: winner-pulse 2s infinite;
         }
 
-        .player-card.winner::before {
-            content: "👑";
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 2rem;
-            background: #ffd700;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        @keyframes winner-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
 
         .player-name {
             font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
+            font-weight: 700;
+            color: #1f2937;
             margin-bottom: 15px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .player-score {
+        .winner-crown {
+            font-size: 1.8rem;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .score-display {
             font-size: 3rem;
-            font-weight: bold;
-            color: #667eea;
-            margin: 15px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .score-change {
-            animation: scoreChange 0.5s ease-out;
-        }
-
-        @keyframes scoreChange {
-            0% { transform: scale(1.2); color: #ff6b6b; }
-            100% { transform: scale(1); }
+            font-weight: 900;
+            text-align: center;
+            color: #4f46e5;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(79, 70, 229, 0.1);
         }
 
         .score-controls {
@@ -270,16 +204,16 @@
             justify-content: center;
             gap: 15px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .score-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
+            border: none;
             font-size: 1.5rem;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -287,618 +221,406 @@
             justify-content: center;
         }
 
-        .score-btn:hover {
-            background: #5a67d8;
-            transform: scale(1.1);
+        .score-btn.plus {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
         }
 
         .score-btn.minus {
-            background: #ff6b6b;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
         }
 
-        .score-btn.minus:hover {
-            background: #ff5252;
+        .score-btn:hover {
+            transform: scale(1.1);
         }
 
-        .custom-score {
+        .score-btn:active {
+            transform: scale(0.95);
+        }
+
+        .score-input {
             display: flex;
             gap: 10px;
-            justify-content: center;
-            align-items: center;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
-        .custom-score input {
-            width: 80px;
-            padding: 8px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
+        .score-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
             text-align: center;
-            font-size: 14px;
+            font-size: 1rem;
         }
 
-        .custom-score button {
-            background: #48bb78;
+        .score-input button {
+            padding: 8px 15px;
+            background: #4f46e5;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
-        .custom-score button:hover {
-            background: #38a169;
+        .history {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 30px;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
-        .game-controls {
+        .history h3 {
+            color: #374151;
+            margin-bottom: 15px;
             text-align: center;
-            padding-top: 30px;
-            border-top: 2px solid #f0f0f0;
-        }
-
-        .history-section {
-            padding: 30px;
-            display: none;
+            font-size: 1.3rem;
         }
 
         .history-item {
-            background: #f8f9fa;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-            border-left: 4px solid #48bb78;
-        }
-
-        .history-item h4 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .history-scores {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .history-score {
             background: white;
             padding: 10px 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 30px;
-            border-radius: 15px;
-            width: 80%;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        .modal-buttons {
-            margin-top: 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             display: flex;
-            gap: 15px;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .modal-btn {
-            padding: 10px 20px;
+        .undo-btn {
+            background: #f59e0b;
+            color: white;
             border: none;
+            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
+            font-size: 0.8rem;
         }
 
-        .modal-btn.confirm {
-            background: #48bb78;
-            color: white;
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        .modal-btn.cancel {
-            background: #ff6b6b;
-            color: white;
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
-        .hidden {
-            display: none;
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #4f46e5;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 5px;
         }
 
         @media (max-width: 768px) {
-            .container {
+            .app-container {
                 margin: 10px;
-                border-radius: 15px;
+                padding: 20px;
             }
             
             .header h1 {
                 font-size: 2rem;
             }
             
-            .player-setup {
-                flex-direction: column;
-            }
-            
-            .player-setup input {
-                min-width: auto;
-            }
-            
-            .scoreboard {
+            .players-grid {
                 grid-template-columns: 1fr;
             }
             
-            .score-controls {
-                gap: 10px;
-            }
-            
-            .score-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-
-            .settings-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .settings-row label {
-                min-width: auto;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .scoreboard {
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            .score-display {
+                font-size: 2.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <div class="header">
-            <h1>🎲 Marcador de Juegos de Mesa de Eric 🎯</h1>
-            <p>¡Lleva el puntaje de tus juegos favoritos!</p>
+            <h1>🎲 Marcador de Juegos</h1>
         </div>
 
-        <div id="setup" class="setup-section">
-            <div class="game-settings">
-                <h3>⚙️ Configuración del Juego</h3>
-                <div class="settings-row">
-                    <label for="victoryType">Condición de Victoria:</label>
-                    <select id="victoryType">
-                        <option value="none">Sin límite</option>
-                        <option value="points">Primero en llegar a...</option>
-                        <option value="rounds">Jugar X rondas</option>
-                    </select>
-                </div>
-                <div class="settings-row" id="victoryValueRow" style="display: none;">
-                    <label for="victoryValue">Objetivo:</label>
-                    <input type="number" id="victoryValue" min="1" value="100">
-                    <span id="victoryLabel">puntos</span>
-                </div>
-            </div>
-
-            <h2>Configurar Jugadores</h2>
-            <div class="player-setup">
-                <input type="text" id="playerName" placeholder="Nombre del jugador" maxlength="20">
-                <button class="add-player-btn" onclick="addPlayer()">Agregar Jugador</button>
-            </div>
-            <div id="playersList" class="players-list"></div>
-            <div style="margin-top: 30px; text-align: center;">
-                <button class="start-game-btn" onclick="startGame()">Iniciar Juego</button>
-                <button class="history-btn" onclick="showHistory()">Ver Historial</button>
-            </div>
-        </div>
-
-        <div id="game" class="game-section">
-            <div id="gameInfo" class="game-info" style="display: none;">
-                <h3>🎯 Objetivo del Juego</h3>
-                <p id="gameObjective"></p>
+        <div id="setup-screen" class="game-setup">
+            <div class="input-group">
+                <label for="game-name">Nombre del Juego:</label>
+                <input type="text" id="game-name" placeholder="ej: Catán, Monopoly, Risk...">
             </div>
             
-            <div id="victoryMessage" class="victory-announcement" style="display: none;">
-                <h2>🎉 ¡Victoria! 🎉</h2>
-                <p id="winnerText"></p>
+            <div class="input-group">
+                <label for="players-count">Número de Jugadores:</label>
+                <select id="players-count">
+                    <option value="2">2 jugadores</option>
+                    <option value="3">3 jugadores</option>
+                    <option value="4">4 jugadores</option>
+                    <option value="5">5 jugadores</option>
+                    <option value="6">6 jugadores</option>
+                    <option value="7">7 jugadores</option>
+                    <option value="8">8 jugadores</option>
+                </select>
             </div>
 
-            <div id="scoreboard" class="scoreboard"></div>
-            <div class="game-controls">
-                <button class="reset-btn" onclick="showResetModal()">Nueva Partida</button>
-                <button class="history-btn" onclick="showHistory()">Ver Historial</button>
+            <div id="player-names-container">
+                <!-- Los nombres se generarán dinámicamente -->
             </div>
+
+            <button class="btn" onclick="startGame()">🚀 Comenzar Partida</button>
         </div>
 
-        <div id="history" class="history-section">
-            <h2>📊 Historial de Partidas</h2>
-            <div id="historyList"></div>
-            <div style="text-align: center; margin-top: 30px;">
-                <button class="add-player-btn" onclick="showSetup()">Volver al Inicio</button>
-                <button class="reset-btn" onclick="clearHistory()">Limpiar Historial</button>
+        <div id="game-screen" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <h2 id="current-game-name" style="color: #4f46e5; font-size: 1.8rem;"></h2>
+                <div>
+                    <button class="btn btn-secondary" onclick="resetScores()">🔄 Reset Puntuaciones</button>
+                    <button class="btn btn-danger" onclick="newGame()">🏠 Nueva Partida</button>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Modal de confirmación -->
-    <div id="resetModal" class="modal">
-        <div class="modal-content">
-            <h3>⚠️ Confirmar Reset</h3>
-            <p>¿Estás seguro de que quieres iniciar una nueva partida? Se perderán todos los puntajes actuales.</p>
-            <div class="modal-buttons">
-                <button class="modal-btn confirm" onclick="confirmReset()">Sí, Nueva Partida</button>
-                <button class="modal-btn cancel" onclick="closeModal()">Cancelar</button>
+            <div class="players-grid" id="players-container">
+                <!-- Los jugadores se generarán dinámicamente -->
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-rounds">0</div>
+                    <div class="stat-label">Rondas Jugadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="highest-score">0</div>
+                    <div class="stat-label">Puntuación Más Alta</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="game-duration">00:00</div>
+                    <div class="stat-label">Duración</div>
+                </div>
+            </div>
+
+            <div class="history">
+                <h3>📝 Historial de Cambios</h3>
+                <div id="history-container">
+                    <p style="text-align: center; color: #9ca3af;">No hay cambios aún...</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         let players = [];
-        let gameStarted = false;
-        let gameSettings = {
-            victoryType: 'none',
-            victoryValue: 100
-        };
-        let gameHistory = [];
-        let currentGame = {
-            startTime: null,
-            endTime: null,
-            settings: {},
-            players: []
-        };
+        let gameStartTime = null;
+        let gameInterval = null;
+        let history = [];
+        let totalRounds = 0;
 
-        // Cargar datos al iniciar
-        window.addEventListener('load', function() {
-            loadGameData();
-            setupEventListeners();
-        });
-
-        function setupEventListeners() {
-            document.getElementById('victoryType').addEventListener('change', function() {
-                const victoryType = this.value;
-                const valueRow = document.getElementById('victoryValueRow');
-                const label = document.getElementById('victoryLabel');
-                
-                if (victoryType === 'none') {
-                    valueRow.style.display = 'none';
-                } else {
-                    valueRow.style.display = 'flex';
-                    label.textContent = victoryType === 'points' ? 'puntos' : 'rondas';
-                }
-                
-                updateGameSettings();
-            });
-
-            document.getElementById('victoryValue').addEventListener('input', updateGameSettings);
-
-            // Permitir agregar jugador con Enter
-            document.getElementById('playerName').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    addPlayer();
-                }
-            });
-
-            // Auto-guardar cada 30 segundos
-            setInterval(saveGameData, 30000);
-        }
-
-        function updateGameSettings() {
-            gameSettings.victoryType = document.getElementById('victoryType').value;
-            gameSettings.victoryValue = parseInt(document.getElementById('victoryValue').value) || 100;
-            saveGameData();
-        }
-
-        function addPlayer() {
-            const nameInput = document.getElementById('playerName');
-            const name = nameInput.value.trim();
+        function generatePlayerNames() {
+            const count = document.getElementById('players-count').value;
+            const container = document.getElementById('player-names-container');
+            container.innerHTML = '';
             
-            if (name === '') {
-                alert('Por favor, introduce un nombre para el jugador');
-                return;
+            for (let i = 1; i <= count; i++) {
+                const div = document.createElement('div');
+                div.className = 'input-group';
+                div.innerHTML = `
+                    <label for="player-${i}">Jugador ${i}:</label>
+                    <input type="text" id="player-${i}" placeholder="Nombre del jugador ${i}">
+                `;
+                container.appendChild(div);
             }
-            
-            if (players.some(player => player.name.toLowerCase() === name.toLowerCase())) {
-                alert('Ya existe un jugador con ese nombre');
-                return;
-            }
-            
-            if (players.length >= 8) {
-                alert('Máximo 8 jugadores permitidos');
-                return;
-            }
-            
-            players.push({
-                name: name,
-                score: 0,
-                id: Date.now()
-            });
-            
-            nameInput.value = '';
-            renderPlayersList();
-            saveGameData();
-        }
-
-        function removePlayer(playerId) {
-            players = players.filter(player => player.id !== playerId);
-            renderPlayersList();
-            saveGameData();
-        }
-
-        function renderPlayersList() {
-            const container = document.getElementById('playersList');
-            
-            if (players.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666; margin: 20px 0;">No hay jugadores agregados</p>';
-                return;
-            }
-            
-            container.innerHTML = players.map(player => `
-                <div class="player-item">
-                    <span><strong>${player.name}</strong></span>
-                    <button class="remove-player" onclick="removePlayer(${player.id})">Eliminar</button>
-                </div>
-            `).join('');
         }
 
         function startGame() {
-            if (players.length < 2) {
-                alert('Se necesitan al menos 2 jugadores para comenzar');
-                return;
+            const gameName = document.getElementById('game-name').value || 'Juego de Mesa';
+            const playerCount = document.getElementById('players-count').value;
+            
+            players = [];
+            for (let i = 1; i <= playerCount; i++) {
+                const name = document.getElementById(`player-${i}`).value || `Jugador ${i}`;
+                players.push({
+                    name: name,
+                    score: 0,
+                    id: i
+                });
             }
+
+            document.getElementById('current-game-name').textContent = `🎮 ${gameName}`;
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
             
-            gameStarted = true;
-            currentGame = {
-                startTime: new Date(),
-                endTime: null,
-                settings: {...gameSettings},
-                players: players.map(p => ({...p}))
-            };
-            
-            document.getElementById('setup').style.display = 'none';
-            document.getElementById('game').style.display = 'block';
-            document.getElementById('history').style.display = 'none';
-            
-            setupGameInfo();
-            renderScoreboard();
-            saveGameData();
+            renderPlayers();
+            startTimer();
+            history = [];
+            totalRounds = 0;
+            updateStats();
         }
 
-        function setupGameInfo() {
-            const gameInfo = document.getElementById('gameInfo');
-            const gameObjective = document.getElementById('gameObjective');
+        function renderPlayers() {
+            const container = document.getElementById('players-container');
+            container.innerHTML = '';
             
-            if (gameSettings.victoryType === 'none') {
-                gameInfo.style.display = 'none';
-            } else {
-                gameInfo.style.display = 'block';
-                if (gameSettings.victoryType === 'points') {
-                    gameObjective.textContent = `El primer jugador en llegar a ${gameSettings.victoryValue} puntos gana`;
-                } else {
-                    gameObjective.textContent = `Jugaremos ${gameSettings.victoryValue} rondas`;
-                }
-            }
-        }
-
-        function renderScoreboard() {
-            const container = document.getElementById('scoreboard');
-            const maxScore = Math.max(...players.map(p => p.score), 0);
-            let winner = null;
+            // Encontrar el ganador actual
+            const maxScore = Math.max(...players.map(p => p.score));
+            const winners = players.filter(p => p.score === maxScore && maxScore > 0);
             
-            // Verificar condición de victoria
-            if (gameSettings.victoryType === 'points' && maxScore >= gameSettings.victoryValue) {
-                winner = players.find(p => p.score === maxScore);
-            }
-            
-            if (winner) {
-                showVictoryMessage(winner);
-            }
-            
-            container.innerHTML = players.map(player => `
-                <div class="player-card ${player.score === maxScore && maxScore > 0 ? 'winner' : ''}">
-                    <div class="player-name">${player.name}</div>
-                    <div class="player-score" id="score-${player.id}">${player.score}</div>
+            players.forEach(player => {
+                const isWinner = winners.includes(player) && winners.length === 1;
+                const div = document.createElement('div');
+                div.className = `player-card ${isWinner ? 'winner' : ''}`;
+                
+                div.innerHTML = `
+                    <div class="player-name">
+                        ${isWinner ? '<span class="winner-crown">👑</span>' : ''}
+                        ${player.name}
+                        ${isWinner ? '<span class="winner-crown">👑</span>' : ''}
+                    </div>
+                    <div class="score-display">${player.score}</div>
                     <div class="score-controls">
                         <button class="score-btn minus" onclick="changeScore(${player.id}, -1)">−</button>
-                        <button class="score-btn" onclick="changeScore(${player.id}, 1)">+</button>
-                        <button class="score-btn" onclick="changeScore(${player.id}, 5)">+5</button>
-                        <button class="score-btn" onclick="changeScore(${player.id}, 10)">+10</button>
+                        <button class="score-btn minus" onclick="changeScore(${player.id}, -5)">-5</button>
+                        <button class="score-btn plus" onclick="changeScore(${player.id}, 1)">+</button>
+                        <button class="score-btn plus" onclick="changeScore(${player.id}, 5)">+5</button>
                     </div>
-                    <div class="custom-score">
-                        <input type="number" id="custom-${player.id}" placeholder="Puntos">
+                    <div class="score-input">
+                        <input type="number" id="custom-score-${player.id}" placeholder="Puntos personalizados">
                         <button onclick="addCustomScore(${player.id})">Añadir</button>
                     </div>
-                </div>
-            `).join('');
+                `;
+                container.appendChild(div);
+            });
         }
 
-        function changeScore(playerId, points) {
+        function changeScore(playerId, change) {
             const player = players.find(p => p.id === playerId);
             if (player) {
-                player.score = Math.max(0, player.score + points);
+                const oldScore = player.score;
+                player.score = Math.max(0, player.score + change);
                 
-                // Animación de cambio de puntaje
-                const scoreElement = document.getElementById(`score-${playerId}`);
-                scoreElement.classList.add('score-change');
-                setTimeout(() => scoreElement.classList.remove('score-change'), 500);
-                
-                renderScoreboard();
-                saveGameData();
+                addToHistory(`${player.name}: ${oldScore} → ${player.score} (${change > 0 ? '+' : ''}${change})`);
+                renderPlayers();
+                updateStats();
             }
         }
 
         function addCustomScore(playerId) {
-            const input = document.getElementById(`custom-${playerId}`);
-            const points = parseInt(input.value);
+            const input = document.getElementById(`custom-score-${playerId}`);
+            const value = parseInt(input.value);
             
-            if (isNaN(points)) {
-                alert('Por favor, introduce un número válido');
-                return;
-            }
-            
-            changeScore(playerId, points);
-            input.value = '';
-        }
-
-        function showVictoryMessage(winner) {
-            const victoryMessage = document.getElementById('victoryMessage');
-            const winnerText = document.getElementById('winnerText');
-            
-            winnerText.textContent = `🏆 ${winner.name} ha ganado con ${winner.score} puntos! 🏆`;
-            victoryMessage.style.display = 'block';
-            
-            // Finalizar partida actual y guardar en historial
-            if (currentGame.endTime === null) {
-                finishCurrentGame();
+            if (value && !isNaN(value)) {
+                changeScore(playerId, value);
+                input.value = '';
             }
         }
 
-        function finishCurrentGame() {
-            currentGame.endTime = new Date();
-            currentGame.players = players.map(p => ({...p}));
+        function addToHistory(action) {
+            history.unshift({
+                action: action,
+                timestamp: new Date().toLocaleTimeString(),
+                players: JSON.parse(JSON.stringify(players)) // Copia profunda
+            });
             
-            gameHistory.unshift(currentGame);
-            
-            // Mantener solo las últimas 50 partidas
-            if (gameHistory.length > 50) {
-                gameHistory = gameHistory.slice(0, 50);
+            if (history.length > 20) {
+                history.pop();
             }
             
-            saveGameData();
-        }
-
-        function showResetModal() {
-            document.getElementById('resetModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('resetModal').style.display = 'none';
-        }
-
-        function confirmReset() {
-            // Guardar partida actual en historial si no se ha guardado
-            if (gameStarted && currentGame.endTime === null) {
-                finishCurrentGame();
-            }
-            
-            players.forEach(player => player.score = 0);
-            gameStarted = false;
-            document.getElementById('victoryMessage').style.display = 'none';
-            document.getElementById('setup').style.display = 'block';
-            document.getElementById('game').style.display = 'none';
-            document.getElementById('history').style.display = 'none';
-            renderPlayersList();
-            closeModal();
-            saveGameData();
-        }
-
-        function showHistory() {
-            document.getElementById('setup').style.display = 'none';
-            document.getElementById('game').style.display = 'none';
-            document.getElementById('history').style.display = 'block';
             renderHistory();
         }
 
-        function showSetup() {
-            document.getElementById('setup').style.display = 'block';
-            document.getElementById('game').style.display = 'none';
-            document.getElementById('history').style.display = 'none';
-        }
-
         function renderHistory() {
-            const container = document.getElementById('historyList');
+            const container = document.getElementById('history-container');
             
-            if (gameHistory.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666; margin: 20px 0;">No hay partidas en el historial</p>';
+            if (history.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #9ca3af;">No hay cambios aún...</p>';
                 return;
             }
             
-            container.innerHTML = gameHistory.map((game, index) => {
-                const date = new Date(game.startTime).toLocaleDateString('es-ES', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                const sortedPlayers = [...game.players].sort((a, b) => b.score - a.score);
-                const winner = sortedPlayers[0];
-                
-                return `
-                    <div class="history-item">
-                        <h4>🎮 Partida #${gameHistory.length - index} - ${date}</h4>
-                        <p><strong>Ganador:</strong> 🏆 ${winner.name} (${winner.score} puntos)</p>
-                        <div class="history-scores">
-                            ${sortedPlayers.map(player => `
-                                <div class="history-score">
-                                    ${player.name}: ${player.score}
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            container.innerHTML = history.map((item, index) => `
+                <div class="history-item">
+                    <span><strong>${item.timestamp}</strong> - ${item.action}</span>
+                    <button class="undo-btn" onclick="undoAction(${index})">↶ Deshacer</button>
+                </div>
+            `).join('');
         }
 
-        function clearHistory() {
-            if (confirm('¿Estás seguro de que quieres limpiar todo el historial?')) {
-                gameHistory = [];
-                renderHistory();
-                saveGameData();
+        function undoAction(index) {
+            if (index < history.length - 1) {
+                players = JSON.parse(JSON.stringify(history[index + 1].players));
+            } else {
+                // Si es la última acción, resetear a 0
+                players.forEach(p => p.score = 0);
             }
-        }
-
-        // Funciones de persistencia de datos
-        function saveGameData() {
-            const gameData = {
-                players: players,
-                gameSettings: gameSettings,
-                gameHistory: gameHistory,
-                gameStarted: gameStarted,
-                currentGame: currentGame,
-                lastSaved: new Date()
-            };
             
-            // Usar variables JavaScript en lugar de localStorage
-            window.gameData = gameData;
+            history.splice(0, index + 1);
+            renderPlayers();
+            renderHistory();
+            updateStats();
         }
 
-        function loadGameData() {
-            // En un entorno real con localStorage, cargaríamos los datos aquí
-            // Por ahora, inicializamos con valores por defecto
-            if (window.gameData) {
-                const data = window.gameData;
-                players = data.players || [];
-                gameSettings = data.gameSettings || { victoryType: 'none', victoryValue: 100 };
-                gameHistory = data.gameHistory || [];
-                gameStarted = data.gameStarted || false;
-                currentGame = data.currentGame || { startTime: null, endTime: null, settings: {}, players: [] };
-                
-                // Restaurar configuración UI
-                document.getElementById('victoryType').value = gameSettings.victoryType;
-                document.getElementById('victoryValue').value = gameSettings.victoryValue;
-                
-                const event = new Event('change');
-                document.getElementById('victoryType').dispatchEvent(event);
-                
-                renderPlayersList();
+        function resetScores() {
+            if (confirm('¿Estás seguro de que quieres resetear todas las puntuaciones?')) {
+                addToHistory('🔄 Puntuaciones reseteadas');
+                players.forEach(p => p.score = 0);
+                renderPlayers();
+                updateStats();
             }
+        }
+
+        function newGame() {
+            if (confirm('¿Estás seguro de que quieres empezar una nueva partida?')) {
+                document.getElementById('setup-screen').style.display = 'block';
+                document.getElementById('game-screen').style.display = 'none';
+                stopTimer();
+                
+                // Limpiar campos
+                document.getElementById('game-name').value = '';
+                generatePlayerNames();
+            }
+        }
+
+        function startTimer() {
+            gameStartTime = Date.now();
+            gameInterval = setInterval(updateTimer, 1000);
+        }
+
+        function stopTimer() {
+            if (gameInterval) {
+                clearInterval(gameInterval);
+                gameInterval = null;
+            }
+        }
+
+        function updateTimer() {
+            if (gameStartTime) {
+                const elapsed = Date.now() - gameStartTime;
+                const minutes = Math.floor(elapsed / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                document.getElementById('game-duration').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('total-rounds').textContent = history.length;
+            
+            const scores = players.map(p => p.score);
+            const maxScore = Math.max(...scores, 0);
+            document.getElementById('highest-score').textContent = maxScore;
         }
 
         // Inicializar
-        renderPlayersList();
+        document.getElementById('players-count').addEventListener('change', generatePlayerNames);
+        generatePlayerNames();
     </script>
 </body>
 </html>
