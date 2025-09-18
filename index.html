@@ -55,7 +55,7 @@
             text-shadow: 2px 2px 4px rgba(79, 70, 229, 0.1);
         }
 
-        .game-setup {
+        .game-setup, .winner-modal, .round-modal {
             background: #f8fafc;
             border-radius: 15px;
             padding: 25px;
@@ -121,6 +121,10 @@
 
         .btn-danger {
             background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
         }
 
         .players-grid {
@@ -329,6 +333,118 @@
             margin-top: 5px;
         }
 
+        /* Modales */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            animation: modalShow 0.3s ease;
+        }
+
+        @keyframes modalShow {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .winner-celebration {
+            font-size: 6rem;
+            margin: 20px 0;
+            animation: celebrate 2s infinite;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f59e0b;
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* Navegación de tabs */
+        .tab-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: #e5e7eb;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Round Modal */
+        .round-inputs {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .round-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f3f4f6;
+            border-radius: 8px;
+        }
+
+        .round-input label {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .round-input input {
+            width: 80px;
+            padding: 5px 10px;
+            border: 2px solid #d1d5db;
+            border-radius: 5px;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .app-container {
                 margin: 10px;
@@ -346,19 +462,26 @@
             .score-display {
                 font-size: 2.5rem;
             }
+            
+            .modal-content {
+                margin: 20% auto;
+                width: 95%;
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="app-container">
         <div class="header">
-            <h1>🎲 Marcador de Juegos de mesa de Eric</h1>
+            <h1>🎲 Marcador de Juegos</h1>
         </div>
 
+        <!-- Pantalla de configuración -->
         <div id="setup-screen" class="game-setup">
             <div class="input-group">
                 <label for="game-name">Nombre del Juego:</label>
-                <input type="text" id="game-name" placeholder="ej: Catán, Monopoly, Risk...">
+                <input type="text" id="game-name" placeholder="ej: Catán, Monopoly, Dominó...">
             </div>
             
             <div class="input-group">
@@ -374,6 +497,11 @@
                 </select>
             </div>
 
+            <div class="input-group">
+                <label for="target-score">Puntuación objetivo (opcional):</label>
+                <input type="number" id="target-score" placeholder="ej: 100, 500... (dejar vacío para juego libre)">
+            </div>
+
             <div id="player-names-container">
                 <!-- Los nombres se generarán dinámicamente -->
             </div>
@@ -381,39 +509,83 @@
             <button class="btn" onclick="startGame()">🚀 Comenzar Partida</button>
         </div>
 
+        <!-- Pantalla principal del juego -->
         <div id="game-screen" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-                <h2 id="current-game-name" style="color: #4f46e5; font-size: 1.8rem;"></h2>
-                <div>
-                    <button class="btn btn-secondary" onclick="resetScores()">🔄 Reset Puntuaciones</button>
-                    <button class="btn btn-danger" onclick="newGame()">🏠 Nueva Partida</button>
+            <!-- Navegación de tabs -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" onclick="showTab('game')">🎮 Juego</button>
+                <button class="tab-btn" onclick="showTab('history')">📝 Historial</button>
+            </div>
+
+            <!-- Tab del juego -->
+            <div id="game-tab" class="tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                    <h2 id="current-game-name" style="color: #4f46e5; font-size: 1.8rem;"></h2>
+                    <div>
+                        <button class="btn btn-success" onclick="openRoundModal()">🏁 Registrar Ronda</button>
+                        <button class="btn btn-secondary" onclick="resetScores()">🔄 Reset</button>
+                        <button class="btn btn-danger" onclick="newGame()">🏠 Nueva Partida</button>
+                    </div>
+                </div>
+
+                <div class="players-grid" id="players-container">
+                    <!-- Los jugadores se generarán dinámicamente -->
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-rounds">0</div>
+                        <div class="stat-label">Rondas Completadas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="highest-score">0</div>
+                        <div class="stat-label">Puntuación Más Alta</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="target-display">-</div>
+                        <div class="stat-label">Objetivo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="game-duration">00:00</div>
+                        <div class="stat-label">Duración</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="players-grid" id="players-container">
-                <!-- Los jugadores se generarán dinámicamente -->
-            </div>
-
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-value" id="total-rounds">0</div>
-                    <div class="stat-label">Rondas Jugadas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="highest-score">0</div>
-                    <div class="stat-label">Puntuación Más Alta</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="game-duration">00:00</div>
-                    <div class="stat-label">Duración</div>
+            <!-- Tab del historial -->
+            <div id="history-tab" class="tab-content">
+                <div class="history">
+                    <h3>📝 Historial de Cambios</h3>
+                    <div id="history-container">
+                        <p style="text-align: center; color: #9ca3af;">No hay cambios aún...</p>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="history">
-                <h3>📝 Historial de Cambios</h3>
-                <div id="history-container">
-                    <p style="text-align: center; color: #9ca3af;">No hay cambios aún...</p>
-                </div>
+    <!-- Modal de ganador -->
+    <div id="winner-modal" class="modal">
+        <div class="modal-content">
+            <div class="winner-celebration">🏆</div>
+            <h2 id="winner-text" style="color: #10b981; font-size: 2.5rem; margin-bottom: 20px;"></h2>
+            <p id="winner-details" style="font-size: 1.2rem; margin-bottom: 30px; color: #6b7280;"></p>
+            <button class="btn" onclick="closeWinnerModal()">🎉 ¡Continuar Jugando!</button>
+            <button class="btn btn-secondary" onclick="newGameFromWinner()">🏠 Nueva Partida</button>
+        </div>
+    </div>
+
+    <!-- Modal de ronda -->
+    <div id="round-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; color: #4f46e5;">🏁 Registrar Ronda</h3>
+            <p style="margin-bottom: 15px; color: #6b7280;">Introduce los puntos obtenidos por cada jugador en esta ronda:</p>
+            <div id="round-inputs" class="round-inputs">
+                <!-- Se generan dinámicamente -->
+            </div>
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                <button class="btn" onclick="submitRound()">✅ Confirmar Ronda</button>
+                <button class="btn btn-secondary" onclick="closeRoundModal()">❌ Cancelar</button>
             </div>
         </div>
     </div>
@@ -424,6 +596,7 @@
         let gameInterval = null;
         let history = [];
         let totalRounds = 0;
+        let targetScore = null;
 
         function generatePlayerNames() {
             const count = document.getElementById('players-count').value;
@@ -444,6 +617,7 @@
         function startGame() {
             const gameName = document.getElementById('game-name').value || 'Juego de Mesa';
             const playerCount = document.getElementById('players-count').value;
+            targetScore = parseInt(document.getElementById('target-score').value) || null;
             
             players = [];
             for (let i = 1; i <= playerCount; i++) {
@@ -464,6 +638,7 @@
             history = [];
             totalRounds = 0;
             updateStats();
+            showTab('game');
         }
 
         function renderPlayers() {
@@ -510,6 +685,7 @@
                 addToHistory(`${player.name}: ${oldScore} → ${player.score} (${change > 0 ? '+' : ''}${change})`);
                 renderPlayers();
                 updateStats();
+                checkForWinner();
             }
         }
 
@@ -527,10 +703,10 @@
             history.unshift({
                 action: action,
                 timestamp: new Date().toLocaleTimeString(),
-                players: JSON.parse(JSON.stringify(players)) // Copia profunda
+                players: JSON.parse(JSON.stringify(players))
             });
             
-            if (history.length > 20) {
+            if (history.length > 50) {
                 history.pop();
             }
             
@@ -557,7 +733,6 @@
             if (index < history.length - 1) {
                 players = JSON.parse(JSON.stringify(history[index + 1].players));
             } else {
-                // Si es la última acción, resetear a 0
                 players.forEach(p => p.score = 0);
             }
             
@@ -571,21 +746,143 @@
             if (confirm('¿Estás seguro de que quieres resetear todas las puntuaciones?')) {
                 addToHistory('🔄 Puntuaciones reseteadas');
                 players.forEach(p => p.score = 0);
+                totalRounds = 0;
                 renderPlayers();
                 updateStats();
             }
         }
 
         function newGame() {
-            if (confirm('¿Estás seguro de que quieres empezar una nueva partida?')) {
+            if (confirm('¿Estás seguro de que quieres empezar una nueva partida? Se perderán todos los datos actuales.')) {
                 document.getElementById('setup-screen').style.display = 'block';
                 document.getElementById('game-screen').style.display = 'none';
                 stopTimer();
                 
                 // Limpiar campos
                 document.getElementById('game-name').value = '';
+                document.getElementById('target-score').value = '';
                 generatePlayerNames();
             }
+        }
+
+        function newGameFromWinner() {
+            closeWinnerModal();
+            newGame();
+        }
+
+        function checkForWinner() {
+            if (targetScore) {
+                const winner = players.find(p => p.score >= targetScore);
+                if (winner) {
+                    showWinnerModal(winner);
+                }
+            }
+        }
+
+        function showWinnerModal(winner) {
+            document.getElementById('winner-text').textContent = `¡${winner.name} ha ganado!`;
+            document.getElementById('winner-details').textContent = `Puntuación: ${winner.score}${targetScore ? ` (Objetivo: ${targetScore})` : ''} • Rondas: ${totalRounds}`;
+            document.getElementById('winner-modal').style.display = 'block';
+            createConfetti();
+        }
+
+        function closeWinnerModal() {
+            document.getElementById('winner-modal').style.display = 'none';
+            removeConfetti();
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = ['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ef4444'][Math.floor(Math.random() * 5)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        function removeConfetti() {
+            document.querySelectorAll('.confetti').forEach(c => c.remove());
+        }
+
+        function openRoundModal() {
+            const container = document.getElementById('round-inputs');
+            container.innerHTML = '';
+            
+            players.forEach(player => {
+                const div = document.createElement('div');
+                div.className = 'round-input';
+                div.innerHTML = `
+                    <label>${player.name}:</label>
+                    <input type="number" id="round-score-${player.id}" value="0" min="0">
+                `;
+                container.appendChild(div);
+            });
+            
+            document.getElementById('round-modal').style.display = 'block';
+        }
+
+        function closeRoundModal() {
+            document.getElementById('round-modal').style.display = 'none';
+        }
+
+        function submitRound() {
+            let roundData = [];
+            let hasValidData = false;
+            
+            players.forEach(player => {
+                const input = document.getElementById(`round-score-${player.id}`);
+                const points = parseInt(input.value) || 0;
+                roundData.push({
+                    player: player,
+                    points: points,
+                    oldScore: player.score
+                });
+                if (points > 0) hasValidData = true;
+            });
+            
+            if (!hasValidData && !confirm('No se han introducido puntos para ningún jugador. ¿Continuar?')) {
+                return;
+            }
+            
+            // Aplicar puntos
+            roundData.forEach(data => {
+                data.player.score += data.points;
+            });
+            
+            totalRounds++;
+            
+            // Crear entrada en el historial
+            const roundSummary = roundData
+                .filter(d => d.points > 0)
+                .map(d => `${d.player.name}: +${d.points}`)
+                .join(', ');
+            
+            addToHistory(`🏁 Ronda ${totalRounds}: ${roundSummary || 'Sin puntos'}`);
+            
+            renderPlayers();
+            updateStats();
+            checkForWinner();
+            closeRoundModal();
+        }
+
+        function showTab(tabName) {
+            // Ocultar todos los tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar tab seleccionado
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
         }
 
         function startTimer() {
@@ -611,12 +908,27 @@
         }
 
         function updateStats() {
-            document.getElementById('total-rounds').textContent = history.length;
+            document.getElementById('total-rounds').textContent = totalRounds;
             
             const scores = players.map(p => p.score);
             const maxScore = Math.max(...scores, 0);
             document.getElementById('highest-score').textContent = maxScore;
+            
+            document.getElementById('target-display').textContent = targetScore || '-';
         }
+
+        // Event listeners para cerrar modales con click fuera
+        window.addEventListener('click', function(event) {
+            const winnerModal = document.getElementById('winner-modal');
+            const roundModal = document.getElementById('round-modal');
+            
+            if (event.target === winnerModal) {
+                closeWinnerModal();
+            }
+            if (event.target === roundModal) {
+                closeRoundModal();
+            }
+        });
 
         // Inicializar
         document.getElementById('players-count').addEventListener('change', generatePlayerNames);
